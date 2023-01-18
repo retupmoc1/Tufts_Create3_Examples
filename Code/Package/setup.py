@@ -22,8 +22,8 @@ setup(
         'console_scripts': [
             "py_node = my_py_pkg.my_first_node:main",
             "robot_news_station = my_py_pkg.robot_news_station:main",
-            "create3_undocking_node = my_py_pkg.create3_undocking_node:main",
-            "create3_docking_node = my_py_pkg.create3_docking_node:main"
+            "undocking_node = my_py_pkg.undocking_node:main",
+            "docking_node = my_py_pkg.docking_node:main"
         ],
     },
 )

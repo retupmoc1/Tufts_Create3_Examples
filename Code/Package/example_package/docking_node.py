@@ -1,9 +1,9 @@
 '''
-This file was heavily influenced by Sawyer Paccione's action undock file:
-https://github.com/paccionesawyer/Create3_ROS2_Intro/blob/main/individual_examples/action_undock.py
-action_undock.py
+This file was heavily influenced by Sawyer Paccione's action dock file:
+https://github.com/paccionesawyer/Create3_ROS2_Intro/blob/main/individual_examples/action_dock.py
+action_dock.py
 Tufts Create® 3 Educational Robot Example
-This file is a simple action client file that will undock the robot if it is docked. 
+This file is a simple action client file that will dock the robot if it is undocked. 
 '''
 
 '''
@@ -14,50 +14,49 @@ from rclpy.action import ActionClient
 from rclpy.node import Node
 
 '''
-This statement imports the undock action.
+This statement imports the dock action.
 '''
-from irobot_create_msgs.action import Undock
+from irobot_create_msgs.action import Dock
 
 '''
 Input your namespace here as a global variable. 
 '''
 namespace = ''
 
-class UndockingActionClient(Node):
+class DockActionClient(Node):
     '''
     This is an action client. Action clients send goal requests to action servers.
-    We are defining a class "UndockingActionClient" which is a subclass of Node. 
+    We are defining a class "DriveServoActionClient" which is a subclass of Node. 
     '''
 
     def __init__(self):
         '''
         We initialize the class by calling the Node constructor then
-        naming the node 'undocking_action_client'
+        naming our node 'dock_action_client'
         '''
-        super().__init__('undocking_action_client')
+        super().__init__('dock_action_client')
         
         '''
         Here we initiate a new action server. We include where to add the action client
-        (self), the type of action (DockServo), and the action name ('dock'). 
+        (self), the type of action (DockServo), and the action name ('dock').
         '''  
         print('Initiating a new action server...')
-        self._action_client = ActionClient(self, Undock, namespace + '/undock')
+        self._action_client = ActionClient(self, Dock, namespace + '/dock')
 
     def send_goal(self):
 
         #Get the action goal message for Undock
-        goal_msg = Undock.Goal()
-        print('Goal Message: ' + str(goal_msg))
-
+        goal_msg = Dock.Goal()
+        print('Goal message: ' + str(goal_msg))
+        
         print('Waiting for action server...')
         self._action_client.wait_for_server()
- 
+        
         print('Send goal and get future')
         self._send_goal_future = self._action_client.send_goal_async(goal_msg)
 
         print('Set response callback')
         self._send_goal_future.add_done_callback(self.goal_response_callback)
-
 
     '''Response Callback ------------------------------
     This is a "done" callback for the initial send_goal_async future registered in the send_goal function.
@@ -106,25 +105,23 @@ class UndockingActionClient(Node):
         print('Shutting down action client node.')
         rclpy.shutdown()
 
-
 def main(args=None):
     '''
-    Initializes ROS2 and creates an instance of 
-    'UndockingActionClient'
-    '''
+    Initialize ROS2 communication and create an instance of 'UndockingActionClient'
+    '''    
     rclpy.init(args=args)
-    undock_client = UndockingActionClient()
-    
+    dock_client = DockActionClient()
+
     '''
     Sends a goal to the server.
     '''
-    print('Action server available. Sending undock goal to server.')
-    undock_client.send_goal()
+    print('Action server available. Sending dock goal to server.')
+    dock_client.send_goal()
     
     '''
     When an action server accepts or rejects the goal, future is completed.
     '''
-    rclpy.spin(undock_client)
+    rclpy.spin(dock_client)
 
 if __name__ == '__main__':
     main()
