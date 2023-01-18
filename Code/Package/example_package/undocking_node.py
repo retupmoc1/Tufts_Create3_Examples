@@ -43,14 +43,19 @@ class UndockingActionClient(Node):
         print('Initiating a new action server...')
         self._action_client = ActionClient(self, Undock, namespace + '/undock')
 
-    def send_goal(self):
+    def send_goal(self, goal_msg):
 
         #Get the action goal message for Undock
-        goal_msg = Undock.Goal()
+        #goal_msg = Undock.Goal()
         print('Goal Message: ' + str(goal_msg))
 
-        print('Waiting for action server...')
-        self._action_client.wait_for_server(5)
+        MAX_WAIT_SECS = 5
+
+        #Wait for server. Shutdown if no response in MAX_WAIT_SECS seconds
+        print('Waiting for action server, {0} secs max...'.format(MAX_WAIT_SECS))
+        if not self._action_client.wait_for_server(MAX_WAIT_SECS):
+            rclpy.shutdown()
+            return
  
         print('Send goal and get future')
         self._send_goal_future = self._action_client.send_goal_async(goal_msg)
@@ -71,18 +76,18 @@ class UndockingActionClient(Node):
         result = future.result()
         accepted = result.accepted
 
-        if accepted:
-            self.get_logger().info('goal_response_callback: Goal ACCEPTED...')
-        else:
-            self.get_logger().info('goal_response_callback: Goal REJECTED...')
-            return
-
         '''
         If the goal was accepted, create a callback for the "done" status
         This step is registering a callback (similar to that of the goal response).
         '''
-        self._get_result_future = result.get_result_async()
-        self._get_result_future.add_done_callback(self.get_result_callback)
+        if accepted:
+            self.get_logger().info('goal_response_callback: Goal ACCEPTED...')
+            self._get_result_future = result.get_result_async()
+            self._get_result_future.add_done_callback(self.get_result_callback)
+        else:
+            self.get_logger().info('goal_response_callback: Goal REJECTED...')
+            print('Shutting down action client node.')
+            rclpy.shutdown()            
 
     
     '''Result Callback ------------------------------
@@ -118,7 +123,7 @@ def main(args=None):
     Sends a goal to the server.
     '''
     print('Action server available. Sending undock goal to server.')
-    undock_client.send_goal()
+    undock_client.send_goal(Undock.Goal())
     
     '''
     When an action server accepts or rejects the goal, future is completed.
