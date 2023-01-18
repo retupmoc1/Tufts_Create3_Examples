@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'example_package'
+package_name = 'my_py_pkg'
 
 setup(
     name=package_name,
@@ -13,14 +13,17 @@ setup(
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    maintainer='maddiepero',
-    maintainer_email='maddie.pero@tuftsceeo.org',
-    description='Test Package for Project Create',
-    license='BSD-3',
+    maintainer='retupmoc',
+    maintainer_email='retupmoc@todo.todo',
+    description='TODO: Package description',
+    license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
-        'console_scripts': ['subscribe = example_package.sub_ir:main','publish = example_package.pub_lightring:main', 'action = example_package.action_drive_square:main', 'action2 = example_package.action_drive_square_2:main', 'combined = example_package.combined_audio_bump:main',
-                            'dock = example_package.action_dock:main', 'undock = example_package.action_undock:main', 'tcp=example_package.tcp_node:main'
+        'console_scripts': [
+            "py_node = my_py_pkg.my_first_node:main",
+            "robot_news_station = my_py_pkg.robot_news_station:main",
+            "create3_undocking_node = my_py_pkg.create3_undocking_node:main",
+            "create3_docking_node = my_py_pkg.create3_docking_node:main"
         ],
     },
 )
