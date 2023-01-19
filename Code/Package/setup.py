@@ -23,7 +23,8 @@ setup(
             "py_node = my_py_pkg.my_first_node:main",
             "robot_news_station = my_py_pkg.robot_news_station:main",
             "undocking_node = my_py_pkg.undocking_node:main",
-            "docking_node = my_py_pkg.docking_node:main"
+            "docking_node = my_py_pkg.docking_node:main",
+            "drive_node = my_py_pkg.drive_node:main"
         ],
     },
 )
