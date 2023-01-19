@@ -54,6 +54,7 @@ class UndockingActionClient(Node):
         #Wait for server. Shutdown if no response in MAX_WAIT_SECS seconds
         print('Waiting for action server, {0} secs max...'.format(MAX_WAIT_SECS))
         if not self._action_client.wait_for_server(MAX_WAIT_SECS):
+            print("Timed-out waiting for goal")
             rclpy.shutdown()
             return
  
@@ -128,7 +129,13 @@ def main(args=None):
     '''
     When an action server accepts or rejects the goal, future is completed.
     '''
-    rclpy.spin(undock_client)
+    try:
+        rclpy.spin(undock_client)
+    except KeyboardInterrupt:
+        print("Stopped via keyboard interrupt")
+        rclpy.shutdown()
+    finally:
+        print("Completed")
 
 if __name__ == '__main__':
     main()
