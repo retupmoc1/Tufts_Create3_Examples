@@ -14,7 +14,16 @@ class drive_node(Node):  # MODIFY NAME
 
         '''
         Here we initiate a new action server. We include where to add the action client
-        (self), the type of action (DockServo), and the action name ('dock'). 
+        (self), the type of action (DriveDistance), and the action name ('drive_distance'). 
+
+        You can find these by calling this in a terminal:
+        ros2 node info /motion_control
+
+        The output will include:
+        /drive_distance: irobot_create_msgs/action/DriveDistance
+
+        DriveDistance was imported in the beginning of this file in this line:
+        from irobot_create_msgs.action  import DriveDistance
         '''  
         print('Initiating a new action server...')
         self._action_client = ActionClient(self, DriveDistance, namespace + 'drive_distance')        
